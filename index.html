@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Warung Makan Saya</title>
+    
+        <!-- Kode tambahan agar web terasa seperti aplikasi -->
+    <meta name="theme-color" content="#28a745">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f4f4f9; 
+            color: #333;
+        }
+        
+        h1 { text-align: center; }
+
+        .menu-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 15px; 
+            justify-content: center;
+        }
+
+        .menu-item { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            width: 130px; 
+            text-align: center; 
+        }
+
+        .keranjang { 
+            margin-top: 30px; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+
+        button { 
+            background-color: #28a745; 
+            color: white; 
+            border: none; 
+            padding: 10px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+    <h1>Menu Spesial Kami</h1>
+    
+    <div class="menu-container">
+        <div class="menu-item">
+            <h3>Nasi Goreng</h3>
+            <p>Rp 20.000</p>
+            <button onclick="tambahKeKeranjang('Nasi Goreng', 20000)">Tambah</button>
+        </div>
+
+        <div class="menu-item">
+            <h3>Ayam Bakar</h3>
+            <p>Rp 25.000</p>
+            <button onclick="tambahKeKeranjang('Ayam Bakar', 25000)">Tambah</button>
+        </div>
+
+        <div class="menu-item">
+            <h3>Es Teh Manis</h3>
+            <p>Rp 5.000</p>
+            <button onclick="tambahKeKeranjang('Es Teh Manis', 5000)">Tambah</button>
+        </div>
+    </div>
+
+    <div class="keranjang">
+        <h2>Pesanan Anda</h2>
+        <ul id="daftar-pesanan"></ul>
+        <h3>Total: Rp <span id="total-harga">0</span></h3>
+        <button onclick="kirimKeWhatsApp()">Pesan via WhatsApp</button>
+    </div>
+
+    <script>
+        let keranjangPesanan = [];
+        let totalHarga = 0;
+
+        function tambahKeKeranjang(namaMakanan, hargaMakanan) {
+            keranjangPesanan.push({ nama: namaMakanan, harga: hargaMakanan });
+            totalHarga = totalHarga + hargaMakanan;
+            perbaruiTampilanKeranjang();
+        }
+
+        function perbaruiTampilanKeranjang() {
+            const wadahDaftar = document.getElementById('daftar-pesanan');
+            wadahDaftar.innerHTML = ''; 
+            
+            keranjangPesanan.forEach(item => {
+                const barisBaru = document.createElement('li');
+                barisBaru.textContent = item.nama + ' - Rp ' + item.harga.toLocaleString('id-ID');
+                wadahDaftar.appendChild(barisBaru);
+            });
+
+            document.getElementById('total-harga').textContent = totalHarga.toLocaleString('id-ID');
+        }
+
+        function kirimKeWhatsApp() {
+            if (keranjangPesanan.length === 0) {
+                alert('Keranjang Anda masih kosong. Silakan pilih menu dulu ya!');
+                return;
+            }
+
+            let teksPesan = 'Halo, saya ingin memesan makanan berikut:%0A%0A';
+            keranjangPesanan.forEach(item => {
+                teksPesan += `- ${item.nama}%0A`; 
+            });
+            teksPesan += `%0ATotal Harga: Rp ${totalHarga.toLocaleString('id-ID')}%0A%0ATerima kasih!`;
+
+            // Jangan lupa ubah nomor di bawah ini menjadi nomor WhatsApp Anda
+            const nomorWhatsAppAnda = '6282285355192'; 
+            
+            const tautanWA = `https://wa.me/${nomorWhatsAppAnda}?text=${teksPesan}`;
+            window.open(tautanWA, '_blank');
+        }
+    </script>
+</body>
+</html>
